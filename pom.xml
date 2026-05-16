@@ -21,7 +21,7 @@
         <mysql-connector.version>5.1.36</mysql-connector.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <jstl.version>1.2</jstl.version>
-        <junit.version>4.10</junit.version>
+        <junit.version>4.13.2</junit.version>
         <logback.version>1.1.3</logback.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -118,17 +118,19 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Updated Mockito for Java 8+/17 compatibility -->
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.9.5</version>
+            <artifactId>mockito-inline</artifactId>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
 
+        <!-- Match spring-test with spring.version -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>3.2.3.RELEASE</version>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -205,23 +207,27 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
 
-            <!-- WAR Plugin (FIXED) -->
+            <!-- WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
             </plugin>
 
-            <!-- Surefire Plugin (FIXED) -->
+            <!-- Surefire Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
+                <configuration>
+                    <!-- Fix Mockito reflective access issues on newer JDK -->
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                </configuration>
             </plugin>
 
             <!-- Jetty -->
@@ -237,7 +243,7 @@
                 </configuration>
             </plugin>
 
-            <!-- JaCoCo (UPDATED) -->
+            <!-- JaCoCo -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
